@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+
+    <style>
+        .main{margin-top:100px;}
+        .wrong{color: red;}
+
+    </style>
+    <link rel="stylesheet" type="text/css" href="/static/plugins/bootstrap/css/bootstrap.css">
+    <script src="/static/js/jquery-3.3.1.min.js"></script>
+    <script src="/static/web/js/login.js"></script>
+</head>
+<body>
+
+<div id="head"></div>
+<h1>登录</h1>
+<div class="container main">
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form next_url="{{ next_url }}" >
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="user">用户名</label>
+                    <input type="text" class="form-control" id="user" name="user" placeholder="请输入用户名"
+                           value="{{ username }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="pwd">密码</label>
+                    <input type="password" class="form-control" id="pwd" name="pwd" placeholder="请输入密码" required>
+                    <p class="wrong pull-right">{{ wrong }}</p>
+                </div>
+                <a href="{% url 'web:register' %}" class="btn btn-success " role="button">注册</a>
+                <button type="button" class="btn btn-info login_btn pull-right">登录</button>
+                <span></span>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
+

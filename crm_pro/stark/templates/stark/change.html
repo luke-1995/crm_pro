@@ -1,0 +1,21 @@
+{% extends 'stark/layout.html' %}
+
+{% block content %}
+<div class="luffy-container">
+    <div class="col-md-6 col-md-offset-3">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for i in form %}
+            <div class="form-group">
+                {{ i.label_tag }}
+                {{ i }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+            </div>
+            {% endfor %}
+            <button  class="btn btn-default login_btn register_btn">保存</button>
+        </form>
+
+    </div>
+</div>
+
+
+{% endblock %}

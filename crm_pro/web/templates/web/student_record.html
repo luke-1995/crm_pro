@@ -1,0 +1,41 @@
+{% extends 'web/layout.html' %}
+
+{% block content %}
+<div class="luffy-container">
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <!--  formset需要用到的变量,否则会报错  -->
+        <button type="submit" class="btn btn-info login_btn pull-right">保存</button>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学生名称</th>
+                <th>上课纪录</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for form in formset %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                {{ form.id }}
+                <td>
+                    {{ form.instance.student }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+                </td>
+                <td>
+                    {{ form.record }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    {% include 'web/paginator.html' %}
+
+</div>
+
+
+{% endblock %}
+
+

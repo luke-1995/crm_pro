@@ -1,0 +1,10 @@
+<div class="static-menu">
+    {% for i in li %}
+    {% if request.path == i.url %}
+    <a href="{{ i.url }}" class="active"><span class="icon-wrap"><i class="fa {{ i.icon }}"></i></span> {{i.title}}</a>
+    {% else %}
+    <a href="{{ i.url }}" class=""><span class="icon-wrap"><i class="fa {{ i.icon }}"></i></span> {{i.title}}</a>
+    {% endif %}
+    {% endfor %}
+
+</div>

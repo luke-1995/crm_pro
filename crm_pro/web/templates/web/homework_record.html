@@ -1,0 +1,66 @@
+{% extends 'web/layout.html' %}
+
+{% block js %}
+<script>
+    $(function(){
+
+                 $('.homework_mark').find('input').focus(function(){
+                    $('.homework button').show()
+                  })
+                })
+</script>
+{% endblock js %}
+
+{% block content %}
+<div class="luffy-container">
+    <form action="" method="post" class="homework">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <!--  formset需要用到的变量,否则会报错  -->
+        <div style="height:35px;">
+            <button type="submit" class="btn btn-info login_btn pull-right" style="display: none;">保存</button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>学生名称</th>
+                <th>作业</th>
+                <th>学生成绩</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for form in formset %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                {{ form.id }}
+                <td>
+                    {{ form.instance.student }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+                </td>
+                <td>
+                    {% if form.instance.file %}
+                    <a href="media/{{ form.instance.file }}" download="{{ form.instance.student }}的作业">作业下载</a>
+                    {% else %}
+                    <span>未提交作业</span>
+                    {% endif %}
+                </td>
+                <td class="homework_mark" style="max-width: 60px;">
+                    {% if form.instance.file %}
+                    {{ form.mark }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+                    {% else %}
+                    <span>- -</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+    {% include 'web/paginator.html' %}
+
+</div>
+
+
+{% endblock %}
+
+

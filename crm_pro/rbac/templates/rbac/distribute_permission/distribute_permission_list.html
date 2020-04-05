@@ -1,0 +1,210 @@
+{% extends 'rbac/layout.html' %}
+{% load rbac_tag %}
+{% block css %}
+<style>
+        tr.active {
+            border-left: 3px solid #fdc00f;
+        }
+
+</style>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+<div class="luffy-container">
+
+    <div class="col-md-3">
+
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <i class="fa fa-book" aria-hidden="true"></i> 用户列表
+
+
+            </div>
+            <div class="panel-body">
+                点击名字和选择权限菜单,即可查看相应的权限,如若想修改,请点击相应的角色
+            </div>
+
+            <!-- Table -->
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>名称</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in user %}
+                <tr class="{% if row.id|safe == uid  %}active{% endif %}">
+                    <td>
+                        <a href="?uid={{ row.id }}&rid={{ rid|default:'' }}&fid={{ fid|default:'' }}">
+                            {{ row.username }}
+                        </a>
+                    </td>
+
+
+                </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="col-md-4">
+
+            <div class="panel panel-info role_area" uid="{{ uid }}">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <i class="fa fa-book" aria-hidden="true"></i> 角色列表
+
+                    <button type="submit" class="right btn btn-success btn-xs"
+                            style="padding: 2px 8px;margin: -3px;display: none;">
+                        保存
+                    </button>
+
+
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" name="operation" value="userinfo2role">
+                    点击名字,即可查看相应的权限,如若想修改,请点击相应的角色名称
+                </div>
+                <!-- Table -->
+                <table class="table table-condensed">
+                    <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>选项</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for row in role %}
+                    <tr class="{% if row.id|safe == rid  %}active{% endif %}">
+                        <td><a href="?uid={{ uid|default:'' }}&rid={{ row.id }}&fid={{ fid|default:'' }}" class="small">
+                            {{ row.title }}</a></td>
+                        <td>
+                            {% if row.id|user_role:uid %}
+                            <input type="checkbox" name="role_id" value="{{ row.id }}" checked="checked">
+                            {% else %}
+                            <input type="checkbox" name="role_id" value="{{ row.id }}">
+                            {% endif %}
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </form>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="col-md-5">
+            <div class="panel panel-success permission_area">
+                <!-- Default panel contents -->
+                <div class="panel-heading">
+                    <div class="dropdown small">
+                        <button class="btn btn-default dropdown-toggle btn-xs" type="button" id="dropdownMenu1"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            {% if first_menu_obj %}
+                            {{ first_menu_obj.title }}
+                            {% else %}
+                            请选择要修改的权限菜单
+                            {% endif %}
+
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            {% for row in first_menu %}
+                            <li>
+                                <a href="?fid={{ row.id }}&uid={{ uid|default:'' }}&rid={{ rid|default:'' }}">
+                                    {{ row.title }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+
+
+                        <button type="submit" class="right btn btn-success btn-xs"
+                                style="padding: 2px 8px;margin: -3px;display: none;">
+                            保存
+                        </button>
+
+
+                    </div>
+
+                </div>
+                <div class="panel-body">
+                    <input type="hidden" name="operation" value="role2permission">
+                    {% for key,dic in menu_dic.items %}
+                    <div>
+
+                        <h5>
+                            <label class="checkbox-inline">
+
+                                {% if rid and dic.id|role_permission:rid %}
+                                <input type="checkbox" value="{{ dic.id }}" name="permission_id" checked
+                                       class="second_menu">
+                                {% elif uid and not rid and dic.id|user_permission:uid %}
+                                <input type="checkbox" value="{{ dic.id }}" name="permission_id" class="second_menu"
+                                       checked
+                                       disabled>
+                                {% elif uid and not rid %}
+                                <input type="checkbox" value="{{ dic.id }}" name="permission_id" disabled
+                                       class="second_menu">
+                                {% else %}
+                                <input type="checkbox" value="{{ dic.id }}" name="permission_id" class="second_menu">
+                                {% endif %}
+                                {{ dic.title }}
+                            </label>
+                            <label class="checkbox-inline pull-right check-all">
+                                <input type="checkbox">全选
+                            </label>
+                        </h5>
+
+                        <p>
+                            {% for permission in dic.children %}
+                            <label class="checkbox-inline">
+                                {% if rid and permission.id|role_permission:rid %}
+                                <input type="checkbox" value="{{ permission.id }}" name="permission_id" checked>
+                                {% elif uid and not rid and permission.id|user_permission:uid %}
+                                <input type="checkbox" value="{{ permission.id }}" name="permission_id" checked
+                                       disabled>
+                                {% elif uid and not rid %}
+                                <input type="checkbox" value="{{ permission.id }}" name="permission_id" disabled>
+                                {% else %}
+                                <input type="checkbox" value="{{ permission.id }}" name="permission_id">
+                                {% endif %}
+                                {{ permission.title }}
+                            </label>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% endblock %}
+
+{% block js %}
+<script src="/static/rbac/js/distribute_permission.js"></script>
+{% endblock js %}
+
+

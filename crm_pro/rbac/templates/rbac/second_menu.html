@@ -1,0 +1,14 @@
+<div class="multi-menu">
+    <div class="item">
+        {% for first_menu in order_dic.values %}
+        <div class="title">{{ first_menu.icon|safe }}
+            {{ first_menu.title }}
+        </div>
+        <div class="body {{ first_menu.class }}">
+            {% for dic in first_menu.children %}
+            <a href="{{ dic.url }}" class="item {{ dic.class }}">{{ dic.title }}</a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>

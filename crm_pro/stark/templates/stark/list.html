@@ -1,0 +1,96 @@
+{% extends 'stark/layout.html' %}
+
+{% block css %}
+<style>
+.list_td{
+white-space: nowrap;
+text-overflow: ellipsis;
+overflow: hidden;
+max-width: 60px;
+}
+</style>
+
+{% endblock css %}
+
+{% block content %}
+<div class="luffy-container">
+
+    {% if search_group_list %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <i class="fa fa-filter" aria-hidden="true"></i> 快速筛选
+        </div>
+        <div class="panel-body">
+            <div class="search-group">
+                {% for row in search_group_list %}
+                <div class="row">
+                    {% for obj in row %}
+                    {{ obj|safe }}
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
+    {% if search_list %}
+
+    <form method="GET" class="form-inline pull-right">
+        <div class="form-group">
+            <input class="form-control" type="text" name="q" value="{{ search_value }}" placeholder="关键字搜索">
+            <button class="btn btn-primary" type="submit">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+        </div>
+    </form>
+
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {% if batch_operation %}
+        <div style="float: left;margin: 5px 10px 5px 0;">
+            <div class="form-inline">
+                <div class="form-group">
+                    <select class="form-control" name="batch_operation">
+                        <option value="">请选择操作</option>
+                        {% for key,value in batch_operation.items %}
+                        <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                    <input class="btn btn-primary" type="submit" value="执行"/>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if add_btn %}
+        {{ add_btn }}
+        {% endif %}
+
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                {% for name in thead_list %}
+                <th>{{ name }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for row in tbody_list %}
+            <tr>
+                {% for i in row %}
+                <td class="list_td">{{ i|default:'- -' }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
+
+    {% include 'stark/paginator.html' %}
+</div>
+{% endblock content %}

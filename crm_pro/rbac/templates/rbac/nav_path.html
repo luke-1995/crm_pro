@@ -1,0 +1,11 @@
+<div>
+    <ol class="breadcrumb no-radius no-margin" style="border-bottom: 1px solid #ddd;">
+        {% for i in request.nav_path %}
+        {% if forloop.last %}
+        <li class="active">{{ i.title }}</li>
+        {% else %}
+        <li><a href="{{ i.url }}">{{ i.title }}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</div>

@@ -1,0 +1,99 @@
+{% extends 'rbac/layout.html' %}
+{% load rbac_tag %}
+
+{% block content %}
+<div class="luffy-container">
+
+    <form action="?operation=add" method="post">
+
+        <div class="panel panel-default">
+
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <i class="fa fa-book" aria-hidden="true"></i> 待添加权限
+                <button type="submit" class="right btn btn-success btn-xs" style="padding: 2px 8px;margin: -3px;">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    全部添加
+                </button>
+
+
+            </div>
+
+            <!-- Table -->
+            {% import_change add_formset %}
+
+        </div>
+    </form>
+
+
+    <div class="panel panel-danger">
+        <!-- Default panel contents -->
+        <div class="panel-heading">
+            <i class="fa fa-book" aria-hidden="true"></i> 待删除的权限
+            <a href="?operation=del" class="right btn btn-danger btn-xs"
+               style="padding: 2px 8px;margin: -3px;">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                全部删除
+            </a>
+
+
+
+        </div>
+
+        <!-- Table -->
+        <table class="table">
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>url名称</th>
+                <th>含有正则的url</th>
+                <th>url的别名</th>
+                <th>父级菜单(二级菜单)</th>
+                <th>一级菜单</th>
+                <th>删除操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for row in del_list %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ row.title }}</td>
+                <td>{{ row.url }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.parent_permission__title|default:'无' }}</td>
+                <td>{{ row.firstmenu__title|default:'无' }}</td>
+                <td>
+                    <a style="color: #d9534f;" href="{% mark_url 'rbac:permission_import_del' request row.id %}"><i
+                            class="fa fa-trash-o"></i></a>
+                </td>
+
+            </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <form action="?operation=update" method="post">
+        <div class="panel panel-info">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <i class="fa fa-book" aria-hidden="true"></i> 待更新权限
+                <button type="submit" class="right btn btn-info btn-xs" style="padding: 2px 8px;margin: -3px;">
+                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                    全部更新
+                </button>
+
+
+            </div>
+
+            <!-- Table -->
+            {% import_change update_formset %}
+
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

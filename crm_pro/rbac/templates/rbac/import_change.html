@@ -1,0 +1,41 @@
+
+
+{% block content %}
+
+    {% csrf_token %}
+    {{ formset.management_form }}
+    <!--  formset需要用到的变量,否则会报错  -->
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>url名称</th>
+            <th>含有正则的url</th>
+            <th>url的别名</th>
+            <th>父菜单(二级菜单)</th>
+            <th>一级菜单</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for form in formset %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            {% for i in form %}
+            {% if i == form.id %}
+            {{ i }}<span class="pull-right text-danger">{{ i.errors.0 }}</span>
+            {% else %}
+            <td>
+                {{ i }} <span class="pull-right text-danger">{{ i.errors.0 }}</span>
+            </td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+
+{% endblock %}
+
+
